@@ -36,7 +36,7 @@ public class PhantomTacticsActivity extends Activity
         OnInvitationReceivedListener, OnTurnBasedMatchUpdateReceivedListener,
         View.OnClickListener{
 
-    public static final String TAG = "SkeletonActivity";
+    public static final String TAG = "PhantomTacticsActivity";
 
     // Client used to interact with Google APIs
     private GoogleApiClient mGoogleApiClient;
@@ -89,7 +89,7 @@ public class PhantomTacticsActivity extends Activity
 
         // Setup signin and signout buttons
         findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.email_sign_in_button).setOnClickListener(this); //TODO: REFACTOR THIS
+        findViewById(R.id.sign_in_button).setOnClickListener(this); //TODO: REFACTOR THIS
 
         mDataView = ((TextView) findViewById(R.id.data_view));
         mTurnTextView = ((TextView) findViewById(R.id.turn_counter_view));
@@ -725,13 +725,6 @@ public class PhantomTacticsActivity extends Activity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
-                // Check to see the developer who's running this sample code read the instructions :-)
-                // NOTE: this check is here only because this is a sample! Don't include this
-                // check in your actual production app.
-                if (!GameUtils.verifySampleSetup(this, R.string.app_id)) {
-                    Log.w(TAG, "*** Warning: setup problems detected. Sign in may not work!");
-                }
-
                 mSignInClicked = true;
                 mTurnBasedMatch = null;
                 findViewById(R.id.sign_in_button).setVisibility(View.GONE);

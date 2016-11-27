@@ -1,4 +1,4 @@
 package infinitetides.phantomtactics.ui.activity;
 
-public class LoginActivity {
+public class MainMenuActivity {
 }
