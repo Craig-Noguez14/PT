@@ -3,46 +3,37 @@ package infinitetides.phantomtactics.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.games.Games;
 
 import infinitetides.phantomtactics.R;
-import infinitetides.phantomtactics.util.GameUtils;
+import infinitetides.phantomtactics.util.Bootstrapper;
 
-public class LoginActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class LoginActivity extends Activity implements  View.OnClickListener {
 
     private GoogleApiClient mGoogleApiClient;
     public static final String TAG = "LoginActivity";
-    private boolean mAutoStartSignInFlow = true; //TODO: MAKE OPTION?
-    private boolean mResolvingConnectionFailure = false;
-
-    private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Create the Google API Client with access to Plus and Games
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
+        if(Bootstrapper.getGoogleApiHelper().isConnected())
+        {
+            //Get google api client
+            mGoogleApiClient = Bootstrapper.getGoogleApiHelper().mGoogleApiClient;
+        }
 
-        // Setup signin and signout buttons
         findViewById(R.id.sign_in_button).setOnClickListener(this);
     }
 
-    @Override
+    /*@Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart(): Connecting to Google APIs");
-        mGoogleApiClient.connect();
+       // mGoogleApiClient.connect();
     }
 
     @Override
@@ -95,7 +86,7 @@ public class LoginActivity extends Activity implements GoogleApiClient.Connectio
                     mGoogleApiClient, connectionResult, RC_SIGN_IN,
                     getString(R.string.signin_other_error));
         }
-    }
+    }*/
 
     @Override
     public void onClick(View v) {

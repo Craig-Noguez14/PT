@@ -8,6 +8,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:screenOrientation="landscape"
+        android:name=".util.Bootstrapper"
         android:theme="@style/Theme.App" >
         <meta-data
             android:name="com.google.android.gms.games.APP_ID"
