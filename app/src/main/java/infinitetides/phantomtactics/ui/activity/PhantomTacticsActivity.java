@@ -284,9 +284,9 @@ public class PhantomTacticsActivity extends Activity
             findViewById(R.id.matchup_layout).setVisibility(View.GONE);
             findViewById(R.id.gameplay_layout).setVisibility(View.GONE);
 
-            if (mAlertDialog != null) {
+            /*if (mAlertDialog != null) {
                 mAlertDialog.dismiss();
-            }
+            }*/
             return;
         }
 

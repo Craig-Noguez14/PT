@@ -3,7 +3,7 @@ package infinitetides.phantomtactics.util;
 import android.app.Application;
 
 public class Bootstrapper extends Application {
-    private GoogleApiHelper googleApiHelper;
+    /*private GoogleApiHelper googleApiHelper;
     private static Bootstrapper mInstance;
 
     @Override
@@ -23,5 +23,5 @@ public class Bootstrapper extends Application {
     }
     public static GoogleApiHelper getGoogleApiHelper() {
         return getInstance().getGoogleApiHelperInstance();
-    }
+    }*/
 }

@@ -1,73 +1,125 @@
 package infinitetides.phantomtactics.util;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 
-public class GoogleApiHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+import infinitetides.phantomtactics.ui.activity.LoginActivity;
 
-    private static final String TAG = GoogleApiHelper.class.getSimpleName();
-    Context context;
-    public static GoogleApiClient mGoogleApiClient;
+/**
+ * Created by yccheok on 9/1/2016.
+ */
+public class GoogleApiHelper extends Fragment implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    public GoogleApiHelper(Context context) {
-        this.context = context;
-        checkPlayServices();
-        buildGoogleApiClient();
+    public interface ConnectionCallbacks {
+        void onConnected(GoogleApiClient googleApiClient, int action);
+        void onCancel(int action);
     }
 
-    public boolean isConnected() {
-        if (mGoogleApiClient != null) {
-            return true;
-        } else {
-            return false;
-        }
+    public static GoogleApiHelper newInstance(String accountName, int action) {
+        GoogleApiHelper googleApiClientFragment = new GoogleApiHelper();
+        Bundle bundle = new Bundle();
+        bundle.putString(INTENT_EXTRA_ACCOUNT_NAME, accountName);
+        bundle.putInt(INTENT_EXTRA_ACTION, action);
+        googleApiClientFragment.setArguments(bundle);
+        return googleApiClientFragment;
     }
 
-    private void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(context)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
+    /**
+     * Handles resolution callbacks.
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        mGoogleApiClient.connect();
-    }
-
-    public boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            /*if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, context, PLAY_SERVICES_REQUEST_CODE).show();
+        if (requestCode == LoginActivity.REQUEST_GOOGLE_API_CLIENT_CONNECT) {
+            if (resultCode == Activity.RESULT_OK) {
+                mGoogleApiClient.connect();
             } else {
-            }*/
-            Log.d(TAG, "Play Services is not suppported on this device");
-            return false;
-        } else {
-            Log.d(TAG, "Looks good m8");
+                Activity activity = this.getActivity();
+                if (activity instanceof ConnectionCallbacks) {
+                    ConnectionCallbacks connectionCallbacks = (ConnectionCallbacks)activity;
+                    connectionCallbacks.onCancel(action);
+                }
+            }
         }
-        return true;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+        Bundle bundle = this.getArguments();
+        this.accountName = bundle.getString(INTENT_EXTRA_ACCOUNT_NAME);
+        this.action = bundle.getInt(INTENT_EXTRA_ACTION);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "On Resume");
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this.getContext())
+                    .setAccountName(accountName)
+                    .addApi(Games.API)
+                    .addScope(Games.SCOPE_GAMES)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+
+            mGoogleApiClient.connect();
+        }
+    }
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d(TAG, "onConnectionSuccess: googleApiClient.connect()");
+        Log.i(TAG, "GoogleApiClient connected");
+
+        Activity activity = this.getActivity();
+        if (activity instanceof ConnectionCallbacks) {
+            ConnectionCallbacks connectionCallbacks = (ConnectionCallbacks)activity;
+            connectionCallbacks.onConnected(mGoogleApiClient, action);
+        }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.d(TAG, "onConnectionSuspended: googleApiClient.connect()");
-        mGoogleApiClient.connect();
+        Log.i(TAG, "GoogleApiClient connection suspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed: connectionResult.toString() = " + connectionResult.toString());
+        Log.i(TAG, "GoogleApiClient connection failed: " + connectionResult.toString());
+
+        if (!connectionResult.hasResolution()) {
+            // show the localized error dialog.
+            GoogleApiAvailability.getInstance().getErrorDialog(this.getActivity(), connectionResult.getErrorCode(), 0).show();
+            return;
+        }
+        try {
+            connectionResult.startResolutionForResult(this.getActivity(), LoginActivity.REQUEST_GOOGLE_API_CLIENT_CONNECT);
+        } catch (IntentSender.SendIntentException e) {
+            Log.e(TAG, "Exception while starting resolution activity", e);
+        }
     }
+
+    private String accountName = null;
+    private int action = -1;
+    public static GoogleApiClient mGoogleApiClient;
+
+    private static final String INTENT_EXTRA_ACCOUNT_NAME = "INTENT_EXTRA_ACCOUNT_NAME";
+    private static final String INTENT_EXTRA_ACTION = "INTENT_EXTRA_ACTION";
+
+    private static final String TAG = "GoogleApiClientFragment";
 }
