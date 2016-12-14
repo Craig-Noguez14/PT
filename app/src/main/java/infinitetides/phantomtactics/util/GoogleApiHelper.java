@@ -12,6 +12,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 
+import infinitetides.phantomtactics.R;
 import infinitetides.phantomtactics.ui.activity.LoginActivity;
 
 /**
@@ -24,6 +25,8 @@ public class GoogleApiHelper extends Fragment implements
         void onConnected(GoogleApiClient googleApiClient, int action);
         void onCancel(int action);
     }
+
+    private static final int RC_SIGN_IN = 9001;
 
     public static GoogleApiHelper newInstance(String accountName, int action) {
         GoogleApiHelper googleApiClientFragment = new GoogleApiHelper();
@@ -76,11 +79,18 @@ public class GoogleApiHelper extends Fragment implements
                     .addScope(Games.SCOPE_GAMES)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
+                    .setViewForPopups(this.getActivity().findViewById(android.R.id.content))
                     .build();
 
             mGoogleApiClient.connect();
         }
     }
+
+   /* private int getActivityView(Activity activity) {
+        if (activity.getClass() == LoginActivity.class) {
+            return this.getActivity().findViewById(android.R.id.login_layout);
+        }
+    }*/
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -88,6 +98,7 @@ public class GoogleApiHelper extends Fragment implements
 
         Activity activity = this.getActivity();
         if (activity instanceof ConnectionCallbacks) {
+            Log.i(TAG, "In on connected if");
             ConnectionCallbacks connectionCallbacks = (ConnectionCallbacks)activity;
             connectionCallbacks.onConnected(mGoogleApiClient, action);
         }
@@ -106,6 +117,10 @@ public class GoogleApiHelper extends Fragment implements
             // show the localized error dialog.
             GoogleApiAvailability.getInstance().getErrorDialog(this.getActivity(), connectionResult.getErrorCode(), 0).show();
             return;
+        } else {
+            GameUtils.resolveConnectionFailure(this.getActivity(),
+                    mGoogleApiClient, connectionResult, RC_SIGN_IN,
+                    getString(R.string.signin_other_error));
         }
         try {
             connectionResult.startResolutionForResult(this.getActivity(), LoginActivity.REQUEST_GOOGLE_API_CLIENT_CONNECT);
