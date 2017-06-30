@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\Users\\Craig\\Documents\\Tactics\\PT\\app\\PT\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\abc_btn_colored_material.xml",
+        "source": "C:\\Users\\Craig\\.android\\build-cache\\15a500cd32c5740e809ace2061e3bd5b9fc67051\\output\\res\\drawable-v21\\abc_btn_colored_material.xml"
+    },
+    {
+        "merged": "C:\\Users\\Craig\\Documents\\Tactics\\PT\\app\\PT\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\notification_action_background.xml",
+        "source": "C:\\Users\\Craig\\.android\\build-cache\\15a500cd32c5740e809ace2061e3bd5b9fc67051\\output\\res\\drawable-v21\\notification_action_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\Craig\\Documents\\Tactics\\PT\\app\\PT\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\abc_action_bar_item_background_material.xml",
+        "source": "C:\\Users\\Craig\\.android\\build-cache\\15a500cd32c5740e809ace2061e3bd5b9fc67051\\output\\res\\drawable-v21\\abc_action_bar_item_background_material.xml"
+    },
+    {
+        "merged": "C:\\Users\\Craig\\Documents\\Tactics\\PT\\app\\PT\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\abc_edit_text_material.xml",
+        "source": "C:\\Users\\Craig\\.android\\build-cache\\15a500cd32c5740e809ace2061e3bd5b9fc67051\\output\\res\\drawable-v21\\abc_edit_text_material.xml"
+    },
+    {
+        "merged": "C:\\Users\\Craig\\Documents\\Tactics\\PT\\app\\PT\\build\\intermediates\\res\\merged\\debug\\drawable-v21\\design_bottom_navigation_item_background.xml",
+        "source": "C:\\Users\\Craig\\.android\\build-cache\\f3a04d92fdbe343eb25d9f4332e68fbe59c2e403\\output\\res\\drawable-v21\\design_bottom_navigation_item_background.xml"
+    }
+]
