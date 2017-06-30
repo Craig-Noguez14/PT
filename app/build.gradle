@@ -1,42 +1,26 @@
-apply plugin: 'com.android.application'
-
-android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+buildscript {
+    repositories {
+        jcenter()
     }
 
-    defaultConfig {
-        applicationId "infinitetides.phantomtactics"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
-        jackOptions {
-            enabled true
-        }
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+    dependencies {
+        classpath "com.android.tools.build:gradle:2.3.3"
     }
 }
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.google.guava:guava:20.0'
+// allprojects apply to every  project
+allprojects {
+    repositories {
+        jcenter()
+    }
 
+    ext {
+        android_compile_version = 25
+        android_version = '25.0.1'
+        android_min_sdk_version = 15
 
-    compile "com.android.support:support-v4:${support_library_version}"
-    compile "com.google.android.gms:play-services-games:${gms_library_version}"
-    compile "com.google.android.gms:play-services-plus:${gms_library_version}"
-
+        appcompat_library_version = '25.1.0'
+        support_library_version = '25.1.0'
+        gms_library_version = '10.0.1'
+    }
 }
